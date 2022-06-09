@@ -16,8 +16,8 @@
         "strict": true,
         "typeRoots": ["node_modules/@types", "lib"]
     },
-    "exclude": ["build", "node_modules"],
-    "include": ["src", "lib"],
+    "exclude": ["build", "node_modules", "lib/nodegui", "lib/ng"],
+    "include": ["src", "lib/ts"],
     "paths": {
         "node:vm": ["lib/*.d.ts", "node_modules/@types/node/vm.d.ts"],
         "*": ["node_modules/*"]
