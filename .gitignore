@@ -3,3 +3,4 @@ build
 pnpm*
 .pnpm*
 lib/nodegui
+.directory

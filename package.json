@@ -8,27 +8,33 @@
         "build:app": "mkjson build/index.js"
     },
     "dependencies": {
-        "@j-cake/jcake-utils": "latest",
-        "chalk": "latest",
-        "lodash": "latest",
-        "@nodegui/qode": "latest",
         "$app": "link:build",
-        "@nodegui/nodegui": "latest"
+        "@j-cake/jcake-utils": "latest",
+        "@nodegui/nodegui": "0.53.0",
+        "@nodegui/qode": "latest",
+        "chalk": "latest",
+        "lodash": "latest"
     },
     "devDependencies": {
-        "@types/node": "latest",
-        "@types/lodash": "latest",
         "@j-cake/mkjson": "latest",
-        "typescript": "latest",
-        "esbuild": "latest"
+        "@types/lodash": "latest",
+        "@types/node": "latest",
+        "esbuild": "latest",
+        "typescript": "latest"
     },
     "targets": {
         "build/index.js": {
-            "dependencies": ["src/*.ts", "run.js"],
+            "dependencies": [
+                "src/*.ts",
+                "run.js"
+            ],
             "run": "esbuild src/index.ts --outdir=build --bundle --sourcemap --splitting --format=esm --platform=node --external:@nodegui/*"
         },
         "build/package.json": {
-            "dependencies": ["package.json", "run.js"],
+            "dependencies": [
+                "package.json",
+                "run.js"
+            ],
             "run": "cat package.json | jq -r '{name} + {version, type, typings, main: \"./index.js\"}' > build/package.json"
         },
         "clean": {
