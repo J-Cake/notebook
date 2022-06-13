@@ -16,6 +16,10 @@
             ],
             "runtimeExecutable": "${workspaceFolder}/node_modules/@nodegui/qode/binaries/qode",
             "type": "node",
+            "env": {
+                "QT_QPA_PLATFORM_PLUGIN_PATH": "/usr/lib/x86_65-linux-gnu/qt5/plugins",
+                "QT_STYLE_OVERRIDE": "kvantum"
+            },
             "preLaunchTask": "npm: build:app"
         }
         

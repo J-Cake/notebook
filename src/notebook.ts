@@ -1,13 +1,14 @@
-import db, * as DB from '@j-cake/jcake-utils/db';
+import { promises as fs } from 'node:fs'
+import DB, * as db from '@j-cake/jcake-utils/db';
 
 export type StylisedText = string | (Partial<Style> & { text: string });
 
 export type Paragraph = {
-    style: Style,
+    style: string | Style,
     text: StylisedText[]
 };
 
-export type Path = {x: number, y: number} | {x: number, y: number}[];
+export type Path = { x: number, y: number } | { x: number, y: number }[];
 
 export type Scribble = {
     stroke: Colour,
@@ -22,24 +23,27 @@ export interface Page {
 }
 export type Tab = Record<string, Page | Page[]>;
 
-export type Colour = `#${number},${number},${number}`;
+export type Colour = `#${number},${number},${number}` | `#${number},${number},${number},${number}`;
 
 export enum Variant {
-    Bold,
-    Italic,
-    Underline,
-    Strikethrough,
-    Superscript,
-    Subscript
+    Bold = 0b000001,
+    Italic = 0b000010,
+    Underline = 0b000100,
+    Strikethrough = 0b001000,
+    Superscript = 0b010000,
+    Subscript = 0b100000
 }
 
 export interface Style {
-    parent?: Style,
+    name: string,
+    parent?: string,
 
     fontFamily: string,
-    fontSize: string,
+    fontSize: number, // in pt
     foreground: Colour,
     background: Colour,
+
+    align: 'start' | 'middle' | 'end'
 
     variant: Variant,
 
@@ -48,13 +52,21 @@ export interface Style {
     pre: number, // spacing (in pt) before paragraph
     post: number, // spacing (in pt) after paragraph
     start: number, // indent (in pt) at paragraph beginning
-    lineHeight: number // offset (in pt) between lines
+    lineHeight: number // multiplied by font size
 }
 
 export interface Notebook {
-    name: string,
+    notebook: {
+        name: string,
+        owner: string,
+        created: bigint,
+        remote?: string,
+        collaborators?: string[] // each person has a public/private key pair, the public keys live here, and will only be authenticated if they can verify they are on the list
+    },
     tabs: Record<string, Tab>,
-    styles: Record<string, Style>
+    styles: Record<string, Partial<Style>>
 }
 
-
+export default async function open(notebook: string): Promise<DB<Notebook>> {
+    return await DB.load(await fs.open(notebook, 'w'));
+}

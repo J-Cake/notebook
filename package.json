@@ -10,7 +10,7 @@
     "dependencies": {
         "$app": "link:build",
         "@j-cake/jcake-utils": "latest",
-        "@nodegui/nodegui": "0.53.0",
+        "@nodegui/nodegui": "0.52.0",
         "@nodegui/qode": "latest",
         "chalk": "latest",
         "lodash": "latest"

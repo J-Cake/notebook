@@ -1,12 +1,22 @@
-import cp from 'node:child_process';
 import * as ng from '@nodegui/nodegui';
+
+import open from '../notebook.js';``
+import { config } from '../index.js';
 
 export function NewNotebook() {
 
 }
 
-export function OpenNotebook() {
-    cp.spawn('bash', ['-c', 'kdialog --getopenfilename "Open notebook" application/json']);
+export async function OpenNotebook(): Promise<void> {
+    const fileDialog = new ng.QFileDialog();
+    fileDialog.setFileMode(ng.FileMode.AnyFile);
+    fileDialog.setNameFilter('Notebooks (*.notebook *.nbk)');
+    fileDialog.exec();
+
+    config.setState({
+        openNotebook: fileDialog.selectedFiles()[0],
+        notebook: await open(fileDialog.selectedFiles()[0])
+    });
 }
 
 export default function mkMenuBar(): ng.QMenuBar {

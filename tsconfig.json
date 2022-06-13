@@ -13,13 +13,9 @@
         "resolveJsonModule": true,
         "forceConsistentCasingInFileNames": true,
         "importHelpers": true,
-        "strict": true,
-        "typeRoots": ["node_modules/@types", "lib"]
+        // "strict": true,
     },
-    "exclude": ["build", "node_modules", "lib/nodegui", "lib/ng"],
-    "include": ["src", "lib/ts", "lib/ng/dist/**/*.d.ts"],
-    "paths": {
-        "node:vm": ["lib/*.d.ts", "node_modules/@types/node/vm.d.ts"],
-        "*": ["node_modules/*"]
-    }
+    "exclude": [
+        "build"
+    ]
 }

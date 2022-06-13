@@ -12,7 +12,8 @@ export const en_GB = {
     open: "Open Notebook",
     new: "New Notebook",
     openToBegin: "Open a Notebook to begin",
-    template: "Templating $0; into $1;"
+    template: "Templating $0; into $1;",
+    path: "$0;"
 };
 
 export async function initLocales(): Promise<StateManager<Record<string, Locale>>> {

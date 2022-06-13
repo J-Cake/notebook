@@ -6,4 +6,5 @@ export default locale({
     new: 'New Notebook',
     template: 'Templating $0; into $1;',
     openToBegin: 'Open a Notebook to begin',
+    path: "$0;"
 });

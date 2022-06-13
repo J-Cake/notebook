@@ -6,4 +6,5 @@ export default locale({
     new: 'Neues Notizbuch',
     template: 'Vorlage $0; in $1;',
     openToBegin: 'Notizbuch öffnen um zu beginnen',
+    path: "$0;"
 });
