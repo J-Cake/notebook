@@ -1,22 +1,36 @@
-import * as ng from 'nodegui';
-import chalk from 'chalk';
+import StateManager from '@j-cake/jcake-utils/state';
+import * as ng from '@nodegui/nodegui';
 import _ from 'lodash';
 
 import parse from './config.js';
-import ui from './ui.js';
+// import { initLocales, Locale, translate } from './locale.js';
+import { LogLevel } from './log.js';
+import { editor, menubar } from './ui/index.js';
 
 export interface Config {
-    default: string
+    // locale: StateManager<Record<string, Locale>>,
+    activeLocale: string,
+    logLevel: LogLevel,
 }
 
-export const config: Config = {} as any;
+export const config: StateManager<Config> = new StateManager({
+    // activeLocale: 'de_DE',
+    // activeLocale: 'en_GB',
+    // locale: await initLocales()
+} as Config);
 
 export default async function main(argv: string[]): Promise<number> {
     _.merge(config, parse(argv.slice(2)));
 
-    const window = new ng.QMainWindow();
+    // @ts-expect-error
+    const window = global.win = new ng.QMainWindow();
 
-    ui(window);
+    // process.title = translate`Notebook`;
+    // window.setWindowTitle(translate`Notebook`);
+
+    window.setCentralWidget(editor(window));
+    window.setMinimumSize(520, 640);
+    window.setMenuBar(menubar());
 
     window.show();
 

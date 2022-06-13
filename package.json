@@ -1,15 +1,11 @@
 {
     "name": "notebook",
-    "main": "build/index.js",
+    "main": "run.js",
     "type": "module",
     "scripts": {
-        "build:app": "esbuild src/index.ts --outdir=build --bundle --sourcemap --splitting --format=esm --platform=node --external:nodegui",
-        "build:_ln": "cat package.json | jq -r '{name} + {version, type, typings, main: \"./index.js\"}' > build/package.json",
-        "start": "node_modules/@nodegui/qode/binaries/qode run.js",
-        "install:nodegui": "node lib/install-ng.js",
-        "build": "cat package.json | jq -r '.scripts | keys_unsorted[] | select(. | startswith(\"build:\"))' | xargs -d \\\\n -I {} $npm_execpath run {}",
+        "start": "qode run.js",
         "clean": "rm -rf build node_modules lib/nodegui lib/ng pnpm* .pnpm* package-lock.json yarn.lock",
-        "all": "$npm_execpath clean && $npm_execpath install && $npm_execpath install:nodegui && $npm_execpath build && $npm_execpath install && $npm_execpath start"
+        "build:app": "mkjson build/index.js"
     },
     "dependencies": {
         "@j-cake/jcake-utils": "latest",
@@ -17,12 +13,27 @@
         "lodash": "latest",
         "@nodegui/qode": "latest",
         "$app": "link:build",
-        "nodegui": "link:lib/ng"
+        "@nodegui/nodegui": "latest"
     },
     "devDependencies": {
         "@types/node": "latest",
         "@types/lodash": "latest",
+        "@j-cake/mkjson": "latest",
         "typescript": "latest",
         "esbuild": "latest"
+    },
+    "targets": {
+        "build/index.js": {
+            "dependencies": ["src/*.ts", "run.js"],
+            "run": "esbuild src/index.ts --outdir=build --bundle --sourcemap --splitting --format=esm --platform=node --external:@nodegui/*"
+        },
+        "build/package.json": {
+            "dependencies": ["package.json", "run.js"],
+            "run": "cat package.json | jq -r '{name} + {version, type, typings, main: \"./index.js\"}' > build/package.json"
+        },
+        "clean": {
+            "run": "rm -rf build node_modules lib/nodegui lib/ng *lock*",
+            "phony": true
+        }
     }
 }
