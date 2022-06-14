@@ -1,5 +1,7 @@
 import { promises as fs } from 'node:fs'
 import DB, * as db from '@j-cake/jcake-utils/db';
+import config from './state.js';
+import { getPageIndex } from './ui/notebook/pages.js';
 
 export type StylisedText = string | (Partial<Style> & { text: string });
 
@@ -21,7 +23,7 @@ export interface Page {
     title: string;
     scribbles: Scribble[]
 }
-export type Tab = Record<string, Page | Page[]>;
+export type Tab = Record<string, Page[]>;
 
 export type Colour = `#${number},${number},${number}` | `#${number},${number},${number},${number}`;
 
@@ -67,6 +69,13 @@ export interface Notebook {
     styles: Record<string, Partial<Style>>
 }
 
-export default async function open(notebook: string): Promise<DB<Notebook>> {
-    return await DB.load(await fs.open(notebook, 'w'));
+export default async function open(notebook: string): Promise<DB<any>> {
+    const file = await DB.load(await fs.open(notebook, 'r+'));
+    config.dispatch('open-notebook', {
+        openNotebook: notebook,
+        notebook: file,
+        pageIndex: await getPageIndex(file)
+    });
+
+    return file;
 }

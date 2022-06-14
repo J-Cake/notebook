@@ -8,8 +8,11 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}/run.js",
             "request": "launch",
+            "args": [
+                "/tmp/notebook-1655205536827.nbk"
+            ],
             "runtimeArgs": [
-                "--enable-source-maps=true"
+                "--enable-source-maps=true",
             ],
             "skipFiles": [
                 "<node_internals>/**"

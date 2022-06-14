@@ -1,6 +1,6 @@
 import * as ng from '@nodegui/nodegui'
 
-import { config } from '../index.js';
+import config from '../state.js';
 import { translate } from '../locale.js';
 
 export default function statusbar(): ng.QStatusBar {

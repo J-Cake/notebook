@@ -22,6 +22,9 @@
         "esbuild": "latest",
         "typescript": "latest"
     },
+    "resources": {
+        "blank.nbk": "lib/blank.nbk"
+    },
     "targets": {
         "build/index.js": {
             "dependencies": [

@@ -1,6 +1,5 @@
 import args, * as Format from '@j-cake/jcake-utils/args';
 
-import { Config } from './index.js';
 import { LogLevel } from './log.js';
 
 export interface Args {
@@ -9,7 +8,7 @@ export interface Args {
 }
 
 export default function parse(argv: string[]): Args {
-    const def = Format.Path(true);
+    const def = Format.Path(false);
     return args({
         logLevel: {
             long: 'log-level',

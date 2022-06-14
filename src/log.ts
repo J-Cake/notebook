@@ -1,6 +1,7 @@
 import chalk from "chalk";
-import { config } from "./index.js";
-import { Locale, translate } from "./locale.js";
+
+import { translate } from "./locale.js";
+import config from "./state.js";
 
 export enum LogLevel {
     Err,
@@ -17,21 +18,15 @@ const prettyTags: Record<LogLevel, string> = {
 };
 
 export default function println(tag: LogLevel, template: TemplateStringsArray, ...templates: any[]): void {
-    process.stdout.write(translate(template, ...templates).replaceAll('\n', `\n${chalk.grey(`[${prettyTags[tag]}]`)} `));
+    const logLevel = config.get().logLevel;
+    if (tag > logLevel)
+        return; 
+
+    const msg = translate(template, ...templates).split('\n').map(i => `${chalk.grey(`[${prettyTags[tag]}]`)} ${i}`).join('\n');
+    console.log(msg);
 }
 
-export function err(template: TemplateStringsArray, ...templates: any[]): void {
-    println(LogLevel.Err, template, ...templates);
-}
-
-export function info(template: TemplateStringsArray, ...templates: any[]): void {
-    println(LogLevel.Info, template, ...templates);
-}
-
-export function verbose(template: TemplateStringsArray, ...templates: any[]): void {
-    println(LogLevel.Verbose, template, ...templates);
-}
-
-export function debug(template: TemplateStringsArray, ...templates: any[]): void {
-    println(LogLevel.Debug, template, ...templates);
-}
+export const err = (template: TemplateStringsArray, ...templates: any[]) => println(LogLevel.Err, template, ...templates);
+export const info = (template: TemplateStringsArray, ...templates: any[]) => println(LogLevel.Info, template, ...templates);
+export const verbose = (template: TemplateStringsArray, ...templates: any[]) => println(LogLevel.Verbose, template, ...templates);
+export const debug = (template: TemplateStringsArray, ...templates: any[]) => println(LogLevel.Debug, template, ...templates);0
