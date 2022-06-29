@@ -9,7 +9,6 @@ import { translate, initLocales } from './locale.js';
 import { editor, menubar, statusbar } from './ui/index.js';
 import open from './notebook.js';
 import * as log from './log.js';
-import { getPageIndex } from './ui/notebook/pages.js';
 
 export default async function main(argv: string[]): Promise<number> {
     const args = parse(argv.slice(2));

@@ -3,7 +3,7 @@
     "main": "run.js",
     "type": "module",
     "scripts": {
-        "start": "qode run.js",
+        "start": "qode --enable-source-maps=true run.js",
         "clean": "rm -rf build node_modules lib/nodegui lib/ng pnpm* .pnpm* package-lock.json yarn.lock",
         "build:app": "mkjson build/index.js"
     },

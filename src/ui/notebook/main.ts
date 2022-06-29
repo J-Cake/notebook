@@ -4,15 +4,15 @@ import type DB from '@j-cake/jcake-utils/db';
 import * as ui from '../util.js';
 import config from '../../state.js';
 import { translate } from '../../locale.js';
-import { NewNotebook, OpenNotebook } from '../menubar.js';
+import { NewNotebook, OpenNotebook, OpenLast } from '../menubar.js';
 import Page from './editor.js';
 import PageList from './pages.js';
-import * as log from '../../log.js';
 
 export function nothingOpen() {
     return ui.box([
         ui.button(translate`New Notebook`, { onTriggered: () => NewNotebook() }),
         ui.button(translate`Open Notebook`, { onTriggered: () => OpenNotebook() }),
+        ui.button(translate`Reopen Last`, { onTriggered: () => OpenLast() }),
     ]);
 }
 

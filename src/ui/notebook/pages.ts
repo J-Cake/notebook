@@ -19,12 +19,6 @@ export async function getPageIndex(DB?: import('@j-cake/jcake-utils/db').default
     for (const [, tab, page] of keys.map(i => i.split('.')))
         (pages[tab] = pages[tab] ?? {})[page] = await db.getAll(['tabs', tab, page, 'title']);
 
-    pages['tab2'] = {
-        page1: 'hello world',
-        page2: 'Hi',
-        page3: 'Bye'
-    }
-
     return pages;
 }
 
@@ -49,6 +43,8 @@ export async function styles(): Promise<ng.QTreeWidget> {
     }, { labels: [translate`Styles`] });
 }
 
-export default async function PageList(): Promise<ng.QSplitter> {
-    return ui.splitter(await pages(), await styles(), { orientation: ng.Orientation.Vertical });
+export default async function PageList(): Promise<ng.QWidget> {
+    const widget = ui.box([ui.splitter(await pages(), await styles(), { orientation: ng.Orientation.Vertical })]);
+    widget.setMaximumWidth(360);
+    return widget;
 }

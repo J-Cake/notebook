@@ -9,12 +9,22 @@ import * as ui from './util.js';
 import pkg from '../../package.json';
 import { translate } from '../locale.js';
 import { getPageIndex } from './notebook/pages.js';
+import { kMaxLength } from 'node:buffer';
 
 export async function NewNotebook() {
     const tmpPath = `${os.tmpdir()}/notebook-${Date.now()}.nbk`;
     const currentFile = import.meta.url.match(/^.+:\/\/(.+)(\/[^\/]*){2}$/)[1]; // find the directory that package.json is in
     await fs.copyFile(`${currentFile}/${pkg.resources['blank.nbk']}`, tmpPath, constants.COPYFILE_EXCL);
     open(tmpPath);
+}
+
+export async function OpenLast() {
+    const prev = `${os.homedir()}/.cache/prev-notebook.nbk`;
+
+    if (await fs.stat(prev).then(stat => stat.isSymbolicLink()).catch(() => false))
+        open(prev);
+
+    await NewNotebook();
 }
 
 export async function OpenNotebook(): Promise<void> {
@@ -45,13 +55,35 @@ export default function mkMenuBar(): ng.QMenuBar {
         return action;
     };
 
-    const file = new ng.QMenu();
-    file.setTitle(translate`File`);
-    file.addAction(item(translate`New Notebook`, () => NewNotebook()));
-    file.addAction(item(translate`Open Notebook`, () => OpenNotebook()));
-    file.addAction(item(translate`Notebook Preferences`, () => OpenPreferences()));
+    const enterText = (text: string) => {
+        const action = new ng.QInputDialog();
 
-    menu.addMenu(file);
+        action.setInputMode(ng.InputMode.TextInput);
+        action.setLabelText(text);
+
+        if (action.exec() == ng.DialogCode.Accepted)
+            return action.textValue();
+        return null;
+    }
+
+    {
+        const file = new ng.QMenu();
+        file.setTitle(translate`File`);
+        file.addAction(item(translate`New Notebook`, () => NewNotebook()));
+        file.addAction(item(translate`Open Notebook`, () => OpenNotebook()));
+        file.addAction(item(translate`Reopen Last`, () => OpenLast()));
+        file.addAction(item(translate`Notebook Preferences`, () => OpenPreferences()));
+        file.addSeparator();
+        file.addAction(item(translate`New Tab`, () => enterText(translate`New Tab`)));
+        file.addAction(item(translate`New Page`, () => enterText(translate`New Page`)));
+
+        menu.addMenu(file);
+    }
+
+    {
+        const edit = new ng.QMenu();
+        edit.setTitle(translate`Edit`);
+    }
 
     return menu;
 }
